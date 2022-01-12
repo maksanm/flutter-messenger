@@ -4,11 +4,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:messenger_app/data/database_service.dart';
 import 'package:messenger_app/data/shared_preference_service.dart';
 import 'package:messenger_app/screens/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  User? getCurrentUser() {
+  getCurrentUser() async {
     return auth.currentUser;
   }
 
@@ -41,5 +42,11 @@ class AuthService {
           (userId) => Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const Home())));
     }
+  }
+
+  Future signOut() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.clear();
+    await auth.signOut();
   }
 }

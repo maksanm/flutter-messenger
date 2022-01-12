@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:messenger_app/data/auth_service.dart';
+import 'package:messenger_app/decorations/theme_service.dart';
+import 'package:messenger_app/screens/home.dart';
 import 'package:messenger_app/screens/signin.dart';
 
 void main() async {
@@ -14,11 +17,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const SignIn(),
-    );
+        themeMode: ThemeMode.system,
+        theme: ThemeService.lightTheme,
+        darkTheme: ThemeService.darkTheme,
+        home: FutureBuilder(
+          future: AuthService().getCurrentUser(),
+          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.hasData) {
+              return const Home();
+            } else {
+              return const SignIn();
+            }
+          },
+        ));
   }
 }
