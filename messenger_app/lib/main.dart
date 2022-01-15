@@ -1,11 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:messenger_app/data/auth_service.dart';
 import 'package:messenger_app/decorations/theme_provider.dart';
 import 'package:messenger_app/screens/home.dart';
-=======
->>>>>>> parent of b8943ec (Added themes and other changes)
 import 'package:messenger_app/screens/signin.dart';
 
 void main() async {
@@ -20,7 +17,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
         themeMode: ThemeMode.system,
         theme: ThemeProvider.lightTheme,
         darkTheme: ThemeProvider.darkTheme,
@@ -34,13 +30,5 @@ class MyApp extends StatelessWidget {
             }
           },
         ));
-=======
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const SignIn(),
-    );
->>>>>>> parent of b8943ec (Added themes and other changes)
   }
 }
