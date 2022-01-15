@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:messenger_app/data/auth_service.dart';
 import 'package:messenger_app/data/database_service.dart';
 import 'package:messenger_app/screens/signin.dart';
+=======
+>>>>>>> parent of b8943ec (Added themes and other changes)
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -27,6 +30,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
         body: CustomScrollView(slivers: [
       SliverAppBar(
         floating: true,
@@ -157,6 +161,9 @@ class _HomeState extends State<Home> {
           const SizedBox(height: 16)
         ],
       ),
+=======
+      appBar: AppBar(title: const Text("Messenger")),
+>>>>>>> parent of b8943ec (Added themes and other changes)
     );
   }
 
