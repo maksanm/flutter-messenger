@@ -30,12 +30,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_auth:
-  firebase_core:
-  shared_preferences:
-  random_string:
-  cloud_firestore:
-  google_sign_in:
+  firebase_auth: ^3.3.5
+  firebase_core: ^1.11.0
+  shared_preferences: ^2.0.12
+  random_string: ^2.3.1
+  cloud_firestore: ^3.1.6
+  google_sign_in: ^5.2.1
 
 dev_dependencies:
   flutter_test:

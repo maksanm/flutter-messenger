@@ -8,4 +8,12 @@ class DatabaseService {
         .doc(userId)
         .set(userInfo);
   }
+
+  Future<Stream<QuerySnapshot>> getUserByUsername(String username) async {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .where("username", isGreaterThanOrEqualTo: username)
+        .where("username", isLessThan: username + 'z')
+        .snapshots();
+  }
 }

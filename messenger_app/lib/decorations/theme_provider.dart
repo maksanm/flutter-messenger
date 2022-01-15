@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ThemeService {
+class ThemeProvider {
   static ThemeData lightTheme = ThemeData(
       scaffoldBackgroundColor: Colors.white,
       colorScheme: const ColorScheme.light(),

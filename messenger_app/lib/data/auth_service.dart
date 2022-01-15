@@ -15,17 +15,24 @@ class AuthService {
 
   signInWithGoogle(BuildContext context) async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
+
     final GoogleSignIn _googleSignIn = GoogleSignIn();
+
     final GoogleSignInAccount? googleSignInAccount =
         await _googleSignIn.signIn();
+
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount!.authentication;
+
     final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken);
+
     UserCredential userCredential =
         await _auth.signInWithCredential(credential);
+
     User? user = userCredential.user;
+
     if (user != null) {
       SharedPreferenceService().saveUserId(user.uid);
       SharedPreferenceService().saveUserEmail(user.email);
@@ -38,6 +45,7 @@ class AuthService {
         "name": user.displayName,
         "profilePhotoUrl": user.photoURL
       };
+
       DatabaseService().uploadUserInfoToDatabase(user.uid, userInfo).then(
           (userId) => Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const Home())));

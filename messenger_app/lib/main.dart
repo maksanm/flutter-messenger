@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:messenger_app/data/auth_service.dart';
-import 'package:messenger_app/decorations/theme_service.dart';
+import 'package:messenger_app/decorations/theme_provider.dart';
 import 'package:messenger_app/screens/home.dart';
 import 'package:messenger_app/screens/signin.dart';
 
@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         themeMode: ThemeMode.system,
-        theme: ThemeService.lightTheme,
-        darkTheme: ThemeService.darkTheme,
+        theme: ThemeProvider.lightTheme,
+        darkTheme: ThemeProvider.darkTheme,
         home: FutureBuilder(
           future: AuthService().getCurrentUser(),
           builder: (context, AsyncSnapshot<dynamic> snapshot) {
