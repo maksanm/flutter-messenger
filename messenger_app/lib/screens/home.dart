@@ -93,13 +93,14 @@ class _HomeState extends State<Home> {
       stream: usersStream,
       builder: (context, AsyncSnapshot snapshot) {
         return snapshot.hasData
-            ? SliverList(delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  DocumentSnapshot docSnapshot = snapshot.data.docs[index - 1];
-                  return searchTile(docSnapshot["name"] + index,
-                      docSnapshot["username"], docSnapshot["profilePhotoUrl"]);
-                },
-              )) /*ListView.builder(
+            ? SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                DocumentSnapshot docSnapshot = snapshot.data.docs[index];
+                return searchTile(docSnapshot["name"], docSnapshot["username"],
+                    docSnapshot["profilePhotoUrl"]);
+              },
+                    childCount: snapshot.data.docs
+                        .length)) /*ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
@@ -121,41 +122,44 @@ class _HomeState extends State<Home> {
   }
 
   Widget searchTile(String name, String username, String profilePhotoUrl) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(
-                  color: Theme.of(context).appBarTheme.foregroundColor!,
-                  width: 0.3))),
-      child: Column(
-        children: [
-          const SizedBox(height: 16),
-          Row(children: [
-            const SizedBox(width: 22),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(32),
-              child: Image.network(
-                profilePhotoUrl,
-                width: 60,
-                height: 60,
-              ),
-            ),
-            const SizedBox(width: 22),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(fontSize: 20),
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                    color: Theme.of(context).appBarTheme.foregroundColor!,
+                    width: 0.3))),
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            Row(children: [
+              const SizedBox(width: 22),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(32),
+                child: Image.network(
+                  profilePhotoUrl,
+                  width: 60,
+                  height: 60,
                 ),
-                const SizedBox(height: 6),
-                Text(username,
-                    style: const TextStyle(fontSize: 16, color: Colors.grey))
-              ],
-            )
-          ]),
-          const SizedBox(height: 16)
-        ],
+              ),
+              const SizedBox(width: 22),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(username,
+                      style: const TextStyle(fontSize: 16, color: Colors.grey))
+                ],
+              )
+            ]),
+            const SizedBox(height: 16)
+          ],
+        ),
       ),
     );
   }
