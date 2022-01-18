@@ -7,6 +7,7 @@ import 'package:messenger_app/data/shared_preference_service.dart';
 import 'package:messenger_app/screens/chat.dart';
 import 'package:messenger_app/screens/signin.dart';
 import 'package:intl/intl.dart';
+import 'package:animations/animations.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -47,6 +48,7 @@ class _HomeState extends State<Home> {
 
   getChats() async {
     chatsStream = await DatabaseService().getChats(myUsername!);
+    setState(() {});
   }
 
   getIdByUsernames(String username1, String username2) {
@@ -108,9 +110,9 @@ class _HomeState extends State<Home> {
                     hintText: 'Search',
                     prefixIcon: InkWell(
                       onTap: () {
+                        FocusScope.of(context).unfocus();
+                        searchController.clear();
                         setState(() {
-                          FocusScope.of(context).unfocus();
-                          searchController.clear();
                           isSearching = false;
                           isTyping = false;
                         });
@@ -196,25 +198,27 @@ class _HomeState extends State<Home> {
   }
 
   Widget searchTile(String name, String username, String profilePhotoUrl) {
-    return InkWell(
-      onTap: () {
-        String chatId = getIdByUsernames(myUsername!, username);
-        Map<String, dynamic> chatInfo = {
-          "users": [myUsername, username]
-        };
-        DatabaseService().createChat(chatId, chatInfo);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Chat(username, name, profilePhotoUrl)));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    color: Theme.of(context).appBarTheme.foregroundColor!,
-                    width: 0.3))),
-        child: Column(
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(
+                  color: Theme.of(context).appBarTheme.foregroundColor!,
+                  width: 0.3))),
+      child: OpenContainer(
+        closedColor: Theme.of(context).appBarTheme.backgroundColor!,
+        openColor: Theme.of(context).appBarTheme.backgroundColor!,
+        transitionType: ContainerTransitionType.fadeThrough,
+        transitionDuration: const Duration(seconds: 1),
+        closedElevation: 0,
+        openBuilder: (context, _) {
+          String chatId = getIdByUsernames(myUsername!, username);
+          Map<String, dynamic> chatInfo = {
+            "users": [myUsername, username]
+          };
+          DatabaseService().createChat(chatId, chatInfo);
+          return Chat(username, name, profilePhotoUrl);
+        },
+        closedBuilder: (context, _) => Column(
           children: [
             const SizedBox(height: 16),
             Row(children: [
@@ -263,7 +267,8 @@ class _HomeState extends State<Home> {
                           .replaceFirst(myUsername!, ""),
                       myUsername!,
                       docSnapshot["lastMessage"],
-                      docSnapshot["lastMessageTime"]);
+                      docSnapshot["lastMessageTime"],
+                      docSnapshot["lastMessageSendBy"] == myUsername);
                 } else {
                   return Container();
                 }
@@ -285,9 +290,10 @@ class _HomeState extends State<Home> {
 class ChatTile extends StatefulWidget {
   final String username, myUsername, lastMessage;
   final Timestamp lastMessageTime;
+  final bool sendByMe;
   // ignore: use_key_in_widget_constructors
-  const ChatTile(
-      this.username, this.myUsername, this.lastMessage, this.lastMessageTime);
+  const ChatTile(this.username, this.myUsername, this.lastMessage,
+      this.lastMessageTime, this.sendByMe);
 
   @override
   State<StatefulWidget> createState() {
@@ -321,28 +327,28 @@ class _ChatTileState extends State<ChatTile> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    Chat(widget.username, name!, profilePhotoUrl!)));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    color: Theme.of(context).appBarTheme.foregroundColor!,
-                    width: 0.3))),
-        child: Column(
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: BorderSide(
+                  color: Theme.of(context).appBarTheme.foregroundColor!,
+                  width: 0.3))),
+      child: OpenContainer(
+        closedColor: Theme.of(context).appBarTheme.backgroundColor!,
+        openColor: Theme.of(context).appBarTheme.backgroundColor!,
+        transitionType: ContainerTransitionType.fadeThrough,
+        transitionDuration: const Duration(seconds: 1),
+        closedElevation: 0,
+        openBuilder: (context, _) =>
+            Chat(widget.username, name!, profilePhotoUrl!),
+        closedBuilder: (context, _) => Column(
           children: [
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(children: [
-                  const SizedBox(width: 22),
+                  const SizedBox(width: 20),
                   ClipRRect(
                       borderRadius: BorderRadius.circular(32),
                       child: profilePhotoUrl != null
@@ -352,7 +358,7 @@ class _ChatTileState extends State<ChatTile> {
                               height: 60,
                             )
                           : Container()),
-                  const SizedBox(width: 22),
+                  const SizedBox(width: 20),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -360,9 +366,21 @@ class _ChatTileState extends State<ChatTile> {
                         name!,
                         style: const TextStyle(fontSize: 20),
                       ),
-                      const SizedBox(height: 6),
-                      widget.lastMessage.length > 30
-                          ? Text(widget.lastMessage.substring(0, 30) + "...",
+                      widget.sendByMe
+                          ? Column(
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                const SizedBox(height: 2.0),
+                                const Text(
+                                  "You:",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 2.0)
+                              ],
+                            )
+                          : const SizedBox(height: 6.0),
+                      widget.lastMessage.length > 27
+                          ? Text(widget.lastMessage.substring(0, 27) + "...",
                               style: const TextStyle(
                                   fontSize: 16, color: Colors.grey))
                           : Text(widget.lastMessage,
@@ -371,10 +389,13 @@ class _ChatTileState extends State<ChatTile> {
                     ],
                   ),
                 ]),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    DateFormat.Hm().format(widget.lastMessageTime.toDate()),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Text(
+                      DateFormat.Hm().format(widget.lastMessageTime.toDate()),
+                    ),
                   ),
                 )
               ],
