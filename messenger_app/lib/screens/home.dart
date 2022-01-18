@@ -208,7 +208,7 @@ class _HomeState extends State<Home> {
         closedColor: Theme.of(context).appBarTheme.backgroundColor!,
         openColor: Theme.of(context).appBarTheme.backgroundColor!,
         transitionType: ContainerTransitionType.fadeThrough,
-        transitionDuration: const Duration(seconds: 1),
+        transitionDuration: const Duration(milliseconds: 750),
         closedElevation: 0,
         openBuilder: (context, _) {
           String chatId = getIdByUsernames(myUsername!, username);
@@ -317,14 +317,6 @@ class _ChatTileState extends State<ChatTile> {
     setState(() {});
   }
 
-  getIdByUsernames(String username1, String username2) {
-    if (username1.compareTo(username2) == 1) {
-      return "$username1\_$username2";
-    } else {
-      return "$username2\_$username1";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -334,76 +326,87 @@ class _ChatTileState extends State<ChatTile> {
                   color: Theme.of(context).appBarTheme.foregroundColor!,
                   width: 0.3))),
       child: OpenContainer(
-        closedColor: Theme.of(context).appBarTheme.backgroundColor!,
-        openColor: Theme.of(context).appBarTheme.backgroundColor!,
-        transitionType: ContainerTransitionType.fadeThrough,
-        transitionDuration: const Duration(seconds: 1),
-        closedElevation: 0,
-        openBuilder: (context, _) =>
-            Chat(widget.username, name!, profilePhotoUrl!),
-        closedBuilder: (context, _) => Column(
-          children: [
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          closedColor: Theme.of(context).appBarTheme.backgroundColor!,
+          openColor: Theme.of(context).appBarTheme.backgroundColor!,
+          transitionType: ContainerTransitionType.fadeThrough,
+          transitionDuration: const Duration(milliseconds: 750),
+          closedElevation: 0,
+          openBuilder: (context, _) =>
+              Chat(widget.username, name!, profilePhotoUrl!),
+          closedBuilder: (context, _) {
+            WidgetsBinding.instance
+                ?.addPostFrameCallback((_) => getUserInfoFromDatabase());
+            return Column(
               children: [
-                Row(children: [
-                  const SizedBox(width: 20),
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(32),
-                      child: profilePhotoUrl != null
-                          ? Image.network(
-                              profilePhotoUrl!,
-                              width: 60,
-                              height: 60,
-                            )
-                          : Container()),
-                  const SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name!,
-                        style: const TextStyle(fontSize: 20),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(children: [
+                      const SizedBox(width: 20),
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(32),
+                          child: profilePhotoUrl != null
+                              ? Image.network(
+                                  profilePhotoUrl!,
+                                  width: 60,
+                                  height: 60,
+                                )
+                              : Container(
+                                  color: Theme.of(context)
+                                      .appBarTheme
+                                      .backgroundColor,
+                                  width: 60,
+                                  height: 60,
+                                )),
+                      const SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name!,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          widget.sendByMe
+                              ? Column(
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  children: [
+                                    const SizedBox(height: 2.0),
+                                    const Text(
+                                      "You:",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(height: 2.0)
+                                  ],
+                                )
+                              : const SizedBox(height: 6.0),
+                          widget.lastMessage.length > 27
+                              ? Text(
+                                  widget.lastMessage.substring(0, 27) + "...",
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.grey))
+                              : Text(widget.lastMessage,
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.grey))
+                        ],
                       ),
-                      widget.sendByMe
-                          ? Column(
-                              // ignore: prefer_const_literals_to_create_immutables
-                              children: [
-                                const SizedBox(height: 2.0),
-                                const Text(
-                                  "You:",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                const SizedBox(height: 2.0)
-                              ],
-                            )
-                          : const SizedBox(height: 6.0),
-                      widget.lastMessage.length > 27
-                          ? Text(widget.lastMessage.substring(0, 27) + "...",
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.grey))
-                          : Text(widget.lastMessage,
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.grey))
-                    ],
-                  ),
-                ]),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: Text(
-                      DateFormat.Hm().format(widget.lastMessageTime.toDate()),
-                    ),
-                  ),
-                )
+                    ]),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Text(
+                          DateFormat.Hm()
+                              .format(widget.lastMessageTime.toDate()),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 16)
               ],
-            ),
-            const SizedBox(height: 16)
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 }
