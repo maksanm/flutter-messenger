@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:messenger_app/data/auth_service.dart';
+import 'package:messenger_app/data/auth_cubit.dart';
 import 'package:messenger_app/data/database_service.dart';
 import 'package:messenger_app/data/shared_preference_service.dart';
 import 'package:messenger_app/screens/chat.dart';
-import 'package:messenger_app/screens/signin.dart';
 import 'package:intl/intl.dart';
 import 'package:animations/animations.dart';
+import 'package:provider/src/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -83,12 +83,7 @@ class _HomeState extends State<Home> {
           title: const Text('Dorm'),
           actions: [
             InkWell(
-              onTap: () {
-                AuthService().signOut().then((data) {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const SignIn()));
-                });
-              },
+              onTap: context.read<AuthCubit>().signOut,
               child: const Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Icon(Icons.logout),
@@ -314,7 +309,7 @@ class _ChatTileState extends State<ChatTile> {
     var user = await DatabaseService().getUserInfoByUsername(widget.username);
     name = "${user.docs[0]["name"]}";
     profilePhotoUrl = "${user.docs[0]["profilePhotoUrl"]}";
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
