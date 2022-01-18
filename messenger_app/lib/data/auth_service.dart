@@ -37,6 +37,8 @@ class AuthService {
       SharedPreferenceService().saveUserId(user.uid);
       SharedPreferenceService().saveUserEmail(user.email);
       SharedPreferenceService().saveUserDisplayName(user.displayName);
+      SharedPreferenceService()
+          .saveUsername(user.email!.replaceFirst("@gmail.com", ""));
       SharedPreferenceService().saveUserProfilePicture(user.photoURL);
 
       Map<String, dynamic> userInfo = {

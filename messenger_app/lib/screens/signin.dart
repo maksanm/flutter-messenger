@@ -18,12 +18,12 @@ class _SignInState extends State<SignIn> {
               child: Text("Sign in with Google",
                   style: TextStyle(
                       fontSize: 16,
-                      color: Theme.of(context).appBarTheme.foregroundColor)),
+                      color: Theme.of(context).appBarTheme.backgroundColor)),
               style: ButtonStyle(
                   fixedSize:
                       MaterialStateProperty.all<Size?>(const Size(250, 40)),
                   backgroundColor: MaterialStateProperty.all<Color?>(
-                      Theme.of(context).appBarTheme.backgroundColor),
+                      Theme.of(context).appBarTheme.foregroundColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                           borderRadius:
