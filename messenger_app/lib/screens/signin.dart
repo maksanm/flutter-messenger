@@ -63,7 +63,7 @@ class _SignInState extends State<SignIn> {
   }
 }
 
-class _PasswordTextField extends StatelessWidget {
+class _PasswordTextField extends StatefulWidget {
   const _PasswordTextField({
     Key? key,
     required this.passwordController,
@@ -72,12 +72,36 @@ class _PasswordTextField extends StatelessWidget {
   final TextEditingController passwordController;
 
   @override
+  State<_PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<_PasswordTextField> {
+  bool passwordVisible = false;
+
+  @override
   Widget build(BuildContext context) {
     return TextField(
       cursorColor: Theme.of(context).appBarTheme.foregroundColor,
       style: const TextStyle(fontSize: 18),
+      obscureText: !passwordVisible,
       decoration: InputDecoration(
         hintText: 'Password',
+        suffixIcon: Padding(
+          padding: const EdgeInsets.only(right: 4.0),
+          child: IconButton(
+            icon: Icon(
+              // Based on passwordVisible state choose the icon
+              passwordVisible ? Icons.visibility : Icons.visibility_off,
+              color: Theme.of(context).appBarTheme.foregroundColor,
+            ),
+            onPressed: () {
+              // Update the state i.e. toogle the state of passwordVisible variable
+              setState(() {
+                passwordVisible = !passwordVisible;
+              });
+            },
+          ),
+        ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
               color: Theme.of(context).appBarTheme.foregroundColor!,
@@ -91,7 +115,7 @@ class _PasswordTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-      controller: passwordController,
+      controller: widget.passwordController,
     );
   }
 }

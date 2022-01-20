@@ -82,7 +82,7 @@ class _HomeState extends State<Home> {
           centerTitle: true,
           title: const Text('Dorm'),
           actions: [
-            InkWell(
+            GestureDetector(
               onTap: context.read<AuthCubit>().signOut,
               child: const Padding(
                 padding: EdgeInsets.all(16.0),
@@ -103,28 +103,11 @@ class _HomeState extends State<Home> {
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(left: 16),
                     hintText: 'Search',
-                    prefixIcon: InkWell(
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                        searchController.clear();
-                        setState(() {
-                          isSearching = false;
-                          isTyping = false;
-                        });
-                      },
+                    prefixIcon: GestureDetector(
                       child: Icon(Icons.arrow_back,
                           color: Theme.of(context).appBarTheme.foregroundColor),
                     ),
-                    suffixIcon: InkWell(
-                      onTap: () {
-                        if (searchController.text != "") {
-                          searchButtonClick();
-                        } else {
-                          setState(() {
-                            isSearching = false;
-                          });
-                        }
-                      },
+                    suffixIcon: GestureDetector(
                       child: Icon(Icons.search,
                           color: Theme.of(context).appBarTheme.foregroundColor),
                     ),
@@ -222,6 +205,7 @@ class _HomeState extends State<Home> {
                 borderRadius: BorderRadius.circular(32),
                 child: Image.network(
                   profilePhotoUrl,
+                  fit: BoxFit.cover,
                   width: 60,
                   height: 60,
                 ),
@@ -344,6 +328,7 @@ class _ChatTileState extends State<ChatTile> {
                           child: profilePhotoUrl != null
                               ? Image.network(
                                   profilePhotoUrl!,
+                                  fit: BoxFit.cover,
                                   width: 60,
                                   height: 60,
                                 )

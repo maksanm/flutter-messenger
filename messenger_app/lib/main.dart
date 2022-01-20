@@ -2,11 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messenger_app/data/auth_cubit.dart';
-import 'package:messenger_app/data/auth_gate.dart';
+import 'package:messenger_app/screens/auth_gate.dart';
 import 'package:messenger_app/data/auth_service.dart';
 import 'package:messenger_app/decorations/theme_provider.dart';
-import 'package:messenger_app/screens/home.dart';
-import 'package:messenger_app/screens/signin.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

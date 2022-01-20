@@ -72,12 +72,13 @@ class AuthCubit extends Cubit<AuthState> {
     return super.close();
   }
 
-  Future<void> signUpWithEmail(
-      String email, String password, String name) async {
+  Future<void> signUpWithEmail(String email, String password, String name,
+      String profilePhotoUrl) async {
     emit(const SigningInState());
 
     try {
-      var res = await authService.signUpWithEmail(email, password, name);
+      var res = await authService.signUpWithEmail(
+          email, password, name, profilePhotoUrl);
       switch (res) {
         case SignInResult.success:
           emit(const SignedInState());

@@ -153,6 +153,7 @@ class _ChatState extends State<Chat> {
                 borderRadius: BorderRadius.circular(32),
                 child: Image.network(
                   widget.profilePhotoUrl,
+                  fit: BoxFit.cover,
                   width: 35,
                   height: 35,
                 ),
@@ -173,7 +174,7 @@ class _ChatState extends State<Chat> {
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(left: 16),
               hintText: 'Message',
-              suffixIcon: InkWell(
+              suffixIcon: GestureDetector(
                 onTap: () {},
                 child: InkWell(
                   borderRadius: BorderRadius.circular(16),

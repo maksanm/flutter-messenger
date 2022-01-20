@@ -39,6 +39,8 @@ dependencies:
   animations: ^2.0.2
   flutter_bloc: ^7.3.3
   provider: ^6.0.1
+  image_picker: ^0.8.4+4
+  firebase_storage: ^10.2.5
 
 dev_dependencies:
   flutter_test:

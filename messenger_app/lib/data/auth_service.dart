@@ -107,8 +107,8 @@ class AuthService {
     }
   }
 
-  Future<SignInResult> signUpWithEmail(
-      String email, String password, String name) async {
+  Future<SignInResult> signUpWithEmail(String email, String password,
+      String name, String profilePhotoUrl) async {
     try {
       await auth.createUserWithEmailAndPassword(
         email: email,
@@ -127,15 +127,13 @@ class AuthService {
         await SharedPreferenceService().saveUserDisplayName(name);
         await SharedPreferenceService()
             .saveUsername(user.email!.replaceFirst("@gmail.com", ""));
-        await SharedPreferenceService().saveUserProfilePicture(
-            "https://icon-library.com/images/new-user-icon/new-user-icon-15.jpg");
+        await SharedPreferenceService().saveUserProfilePicture(profilePhotoUrl);
 
         Map<String, dynamic> userInfo = {
           "email": user.email,
           "username": user.email!.substring(0, user.email!.indexOf('@')),
           "name": name,
-          "profilePhotoUrl":
-              "https://icon-library.com/images/new-user-icon/new-user-icon-15.jpg"
+          "profilePhotoUrl": profilePhotoUrl
         };
 
         DatabaseService().uploadUserInfoToDatabase(user.uid, userInfo);
